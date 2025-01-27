@@ -55,33 +55,33 @@ Module Program
         Console.WriteLine(
             $"Years,PaymentAmount,PrincipalAmount,InterestAmount,RemainingBalance,YearTotal, 3 year total,5 year total, 10 year total")
         For year As Integer = 5 To 30 Step 5
-            dim paymentSchedule = CalculateAmortizationSchedule(new LoanRequestDto(year*12, Amount, InterestRate))
+            Dim paymentSchedule = CalculateAmortizationSchedule(new LoanRequestDto(year*12, Amount, InterestRate))
 
-            dim totalPaid3Year = paymentSchedule.PaymentScheduleRows.Take(3*12).Sum(Function(w)  w.PrincipalAmount)
-            dim totalPaidFiveYear = paymentSchedule.PaymentScheduleRows.Take(5*12).Sum(Function(w) w.PrincipalAmount)
-            dim totalPaid10Year = paymentSchedule.PaymentScheduleRows.Take(10*12).Sum(Function(w)  w.PrincipalAmount)
+            Dim totalPaid3Year = paymentSchedule.PaymentScheduleRows.Take(3*12).Sum(Function(w)  w.PrincipalAmount)
+            Dim totalPaidFiveYear = paymentSchedule.PaymentScheduleRows.Take(5*12).Sum(Function(w) w.PrincipalAmount)
+            Dim totalPaid10Year = paymentSchedule.PaymentScheduleRows.Take(10*12).Sum(Function(w)  w.PrincipalAmount)
             Console.WriteLine(
                 ($"{year} year, ").PadRight(10) +
                 $"Payment amount:{paymentSchedule.PaymentScheduleRows.First().PaymentAmount:C} " +
-                $"Total Paid:{paymentSchedule.PaymentScheduleRows.Sum(function(w) w.PaymentAmount):C}, " +
-                $"Total principal at 3 years:{totalPaid3Year:C}, Total at 5 years {totalPaidFiveYear _
-                    }, Total at 10 years {totalPaid10Year:C}")
+                $"Total Paid:{paymentSchedule.PaymentScheduleRows.Sum(Function(w) w.PaymentAmount):C}, " +
+                $"Total principal at 3 years:{totalPaid3Year:C}, Total at 5 years {totalPaidFiveYear}" +
+                $", Total at 10 years {totalPaid10Year:C}")
         Next
     End Sub
 
 
     private Function CalculateAmortizationSchedule(loanRequest as LoanRequestDto) As PaymentSchedule
 
-        dim schedule as List(Of PaymentScheduleRow) = New List(Of PaymentScheduleRow)()
-        dim monthlyInterestRate As decimal = loanRequest.InterestRate/12/100
-        dim monthlyPayment = Math.Round(
+        Dim schedule = New List(Of PaymentScheduleRow)()
+        Dim monthlyInterestRate As decimal = loanRequest.InterestRate/12/100
+        Dim monthlyPayment = Math.Round(
             CalculateMonthlyPayment(loanRequest.LoanAmount, monthlyInterestRate, loanRequest.NumberOfPayments), 2)
 
-        dim remaining = loanRequest.LoanAmount
+        Dim remaining = loanRequest.LoanAmount
 
         For number As Integer = 1 To loanrequest.NumberOfPayments
-            dim interestPayment = Math.Round(remaining*monthlyInterestRate, 2)
-            dim principalPayment = monthlyPayment - interestPayment
+            Dim interestPayment = Math.Round(remaining*monthlyInterestRate, 2)
+            Dim principalPayment = monthlyPayment - interestPayment
 
             remaining -= principalPayment
             if (remaining < principalPayment) Then
@@ -91,7 +91,7 @@ Module Program
                 remaining = 0
             End If
 
-            schedule.Add(New PaymentScheduleRow(number,principalPayment,interestPayment,monthlyPayment,remaining))
+            schedule.Add(New PaymentScheduleRow(number, principalPayment, interestPayment, monthlyPayment, remaining))
         Next
 
         Return New PaymentSchedule(loanRequest, schedule.Sum(Function(e) e.InterestAmount), schedule.ToArray())
@@ -103,7 +103,7 @@ Module Program
         if (monthlyInterest <= 0) Then
             return loanAmount/numberOfPayments
         End If
-        dim power as Decimal = Math.Pow(1 + CType(monthlyInterest, Double), numberOfPayments)
+        Dim power as Decimal = Math.Pow(1 + CType(monthlyInterest, Double), numberOfPayments)
         return loanAmount*(monthlyInterest*power)/(power - 1)
     End Function
 End Module
