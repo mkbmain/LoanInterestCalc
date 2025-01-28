@@ -40,11 +40,11 @@ Class PaymentScheduleRow
         Me.RemainingBalance = remainingBalance
     End Sub
 
-    Public Property PaymentNumber As Integer
-    Public Property PrincipalAmount As Decimal
-    Public Property InterestAmount As Decimal
-    Public Property PaymentAmount As Decimal
-    Public Property RemainingBalance As Decimal
+    Public ReadOnly Property PaymentNumber As Integer
+    Public ReadOnly Property PrincipalAmount As Decimal
+    Public ReadOnly Property InterestAmount As Decimal
+    Public ReadOnly Property PaymentAmount As Decimal
+    Public ReadOnly Property RemainingBalance As Decimal
 End Class
 
 Module Program
@@ -71,27 +71,27 @@ Module Program
 
 
     private Function CalculateAmortizationSchedule(loanRequest as LoanRequestDto) As PaymentSchedule
-
         Dim schedule = New List(Of PaymentScheduleRow)()
         Dim monthlyInterestRate As decimal = loanRequest.InterestRate/12/100
         Dim monthlyPayment = Math.Round(
             CalculateMonthlyPayment(loanRequest.LoanAmount, monthlyInterestRate, loanRequest.NumberOfPayments), 2)
 
-        Dim remaining = loanRequest.LoanAmount
+        Dim remainingBalance = loanRequest.LoanAmount
 
         For number As Integer = 1 To loanrequest.NumberOfPayments
-            Dim interestPayment = Math.Round(remaining*monthlyInterestRate, 2)
+            Dim interestPayment = Math.Round(remainingBalance*monthlyInterestRate, 2)
             Dim principalPayment = monthlyPayment - interestPayment
 
-            remaining -= principalPayment
-            if (remaining < principalPayment) Then
+            remainingBalance -= principalPayment
+            if (remainingBalance < principalPayment) Then
 
-                principalPayment += remaining
-                monthlyPayment += remaining
-                remaining = 0
+                principalPayment += remainingBalance
+                monthlyPayment += remainingBalance
+                remainingBalance = 0
             End If
 
-            schedule.Add(New PaymentScheduleRow(number, principalPayment, interestPayment, monthlyPayment, remaining))
+            schedule.Add(New PaymentScheduleRow(number, principalPayment, interestPayment, monthlyPayment,
+                                                remainingBalance))
         Next
 
         Return New PaymentSchedule(loanRequest, schedule.Sum(Function(e) e.InterestAmount), schedule.ToArray())
@@ -103,6 +103,7 @@ Module Program
         if (monthlyInterest <= 0) Then
             return loanAmount/numberOfPayments
         End If
+
         Dim power as Decimal = Math.Pow(1 + CType(monthlyInterest, Double), numberOfPayments)
         return loanAmount*(monthlyInterest*power)/(power - 1)
     End Function
