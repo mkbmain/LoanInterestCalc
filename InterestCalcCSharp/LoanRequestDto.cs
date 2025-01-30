@@ -1,0 +1,1 @@
+internal record LoanRequestDto(int NumberOfPayments, decimal LoanAmount, double InterestRate);

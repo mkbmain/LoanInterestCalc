@@ -1,52 +1,5 @@
 Imports System
 
-Class LoanRequestDto
-    Sub new(numberOfPayments as Integer, loanAmount as Decimal, interestRate as Double)
-        Me.NumberOfPayments = numberOfPayments
-        Me.LoanAmount = loanAmount
-        Me.InterestRate = interestRate
-    End Sub
-
-    Public ReadOnly Property NumberOfPayments as Integer
-    Public ReadOnly Property LoanAmount as Decimal
-    Public ReadOnly Property InterestRate as Double
-End Class
-
-Class PaymentSchedule
-    Sub new(loanRequestDto as LoanRequestDto,
-            totalInterestPaid as decimal,
-            paymentScheduleRows as PaymentScheduleRow())
-
-        Me.LoanRequestDto = loanRequestDto
-        Me.PaymentScheduleRows = paymentScheduleRows
-        Me.TotalInterestPaid = totalInterestPaid
-    End Sub
-
-    Public ReadOnly Property LoanRequestDto as LoanRequestDto
-    Public ReadOnly Property TotalInterestPaid as Decimal
-    Public ReadOnly Property PaymentScheduleRows as PaymentScheduleRow()
-End Class
-
-Class PaymentScheduleRow
-    Sub new(paymentNumber as Integer,
-            principalAmount as Decimal,
-            interestAmount as Decimal,
-            paymentAmount as Decimal,
-            remainingBalance as Decimal)
-        Me.PaymentNumber = paymentNumber
-        Me.PrincipalAmount = principalAmount
-        Me.InterestAmount = interestAmount
-        Me.PaymentAmount = paymentAmount
-        Me.RemainingBalance = remainingBalance
-    End Sub
-
-    Public ReadOnly Property PaymentNumber As Integer
-    Public ReadOnly Property PrincipalAmount As Decimal
-    Public ReadOnly Property InterestAmount As Decimal
-    Public ReadOnly Property PaymentAmount As Decimal
-    Public ReadOnly Property RemainingBalance As Decimal
-End Class
-
 Module Program
     private Const Amount as Integer = 200_000
     private Const InterestRate as double = 4.15
@@ -71,6 +24,15 @@ Module Program
 
 
     private Function CalculateAmortizationSchedule(loanRequest as LoanRequestDto) As PaymentSchedule
+        
+        if loanRequest is Nothing Then
+            Throw new NullReferenceException($"Parameter {NameOf(loanRequest)} cannot be NULL")
+        End If
+        
+        if loanRequest.LoanAmount <=0 Then
+            throw new NullReferenceException($"Invalid loan amount! The loan amount cannot be less than or equal to 0")
+        End If
+               
         Dim schedule = New List(Of PaymentScheduleRow)()
         Dim monthlyInterestRate As decimal = loanRequest.InterestRate/12/100
         Dim monthlyPayment = Math.Round(

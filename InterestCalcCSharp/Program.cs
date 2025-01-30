@@ -61,18 +61,3 @@ static decimal CalculateMonthlyPayment(decimal loanAmount, decimal monthlyIntere
     var power = (decimal)Math.Pow(1 + (double)monthlyInterestRate, numberOfPayments);
     return loanAmount * (monthlyInterestRate * power) / (power - 1);
 }
-
-
-internal record LoanRequestDto(int NumberOfPayments, decimal LoanAmount, double InterestRate);
-
-internal record PaymentSchedule(
-    LoanRequestDto LoanRequestDto,
-    decimal TotalInterestRate,
-    PaymentScheduleRow[] PaymentScheduleRows);
-
-internal record PaymentScheduleRow(
-    int PaymentNumber,
-    decimal PrincipalAmount,
-    decimal InterestAmount,
-    decimal PaymentAmount,
-    decimal RemainingBalance);
