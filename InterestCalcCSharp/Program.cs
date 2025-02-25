@@ -17,6 +17,7 @@ for (int year = 5; year <= 30; year += 5)
         $"Total at 10 years {totalPaid10Year:C}");
 }
 
+return;
 
 static PaymentSchedule CalculateAmortizationSchedule(LoanRequestDto loan)
 {
