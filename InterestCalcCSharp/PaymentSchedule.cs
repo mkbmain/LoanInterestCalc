@@ -1,4 +1,6 @@
 internal record PaymentSchedule(
     LoanRequestDto LoanRequestDto,
-    decimal TotalInterestRate,
-    PaymentScheduleRow[] PaymentScheduleRows);
+    PaymentScheduleRow[] PaymentScheduleRows)
+{
+    public decimal TotalInterestRate => PaymentScheduleRows.Sum(w => w.InterestAmount);
+};

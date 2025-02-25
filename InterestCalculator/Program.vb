@@ -8,13 +8,13 @@ Module Program
         Console.WriteLine(
             $"Years,PaymentAmount,PrincipalAmount,InterestAmount,RemainingBalance,YearTotal, 3 year total,5 year total, 10 year total")
         For year As Integer = 5 To 30 Step 5
-            Dim paymentSchedule = CalculateAmortizationSchedule(new LoanRequestDto(year*12, Amount, InterestRate))
+            Dim paymentSchedule As PaymentSchedule = CalculateAmortizationSchedule(new LoanRequestDto(year*12, Amount, InterestRate))
 
             Dim totalPaid3Year = paymentSchedule.PaymentScheduleRows.Take(3*12).Sum(Function(w)  w.PrincipalAmount)
             Dim totalPaidFiveYear = paymentSchedule.PaymentScheduleRows.Take(5*12).Sum(Function(w) w.PrincipalAmount)
             Dim totalPaid10Year = paymentSchedule.PaymentScheduleRows.Take(10*12).Sum(Function(w)  w.PrincipalAmount)
             Console.WriteLine(
-                ($"{year} year, ").PadRight(10) +
+                ($"{year} year, ").PadRight(9) +
                 $"Payment amount:{paymentSchedule.PaymentScheduleRows.First().PaymentAmount:C} " +
                 $"Total Paid:{paymentSchedule.PaymentScheduleRows.Sum(Function(w) w.PaymentAmount):C}, " +
                 $"Total principal at 3 years:{totalPaid3Year:C}, Total at 5 years {totalPaidFiveYear:C}" +
@@ -45,8 +45,8 @@ Module Program
             Dim principalPayment = monthlyPayment - interestPayment
 
             remainingBalance -= principalPayment
+            
             if (remainingBalance < principalPayment) Then
-
                 principalPayment += remainingBalance
                 monthlyPayment += remainingBalance
                 remainingBalance = 0
@@ -56,7 +56,7 @@ Module Program
                                                 remainingBalance))
         Next
 
-        Return New PaymentSchedule(loanRequest, schedule.Sum(Function(e) e.InterestAmount), schedule.ToArray())
+        Return New PaymentSchedule(loanRequest, schedule.ToArray())
     End Function
 
     Private Function CalculateMonthlyPayment(loanAmount as Decimal,

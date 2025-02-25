@@ -50,8 +50,7 @@ static PaymentSchedule CalculateAmortizationSchedule(LoanRequestDto loan)
             remainingBalance));
     }
 
-    return new PaymentSchedule(loan, amortizationSchedule.Sum(w => w.InterestAmount),
-        amortizationSchedule.ToArray());
+    return new PaymentSchedule(loan, amortizationSchedule.ToArray());
 }
 
 static decimal CalculateMonthlyPayment(decimal loanAmount, decimal monthlyInterestRate, int numberOfPayments)
