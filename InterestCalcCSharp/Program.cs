@@ -13,7 +13,7 @@ for (int year = 5; year <= 30; year += 5)
         ($"{year} year, ").PadRight(10) +
         $"Payment amount:{paymentSchedule.PaymentScheduleRows.First().PaymentAmount:C} " +
         $"Total Paid:{paymentSchedule.PaymentScheduleRows.Sum(w => w.PaymentAmount):C}, " +
-        $"Total principal at 3 years:{totalPaid3Year:C}, Total at 5 years {totalPaidFiveYear}," +
+        $"Total principal at 3 years:{totalPaid3Year:C}, Total at 5 years {totalPaidFiveYear:C}," +
         $"Total at 10 years {totalPaid10Year:C}");
 }
 
