@@ -1,7 +1,7 @@
 Imports System
 
 Module Program
-    private Const Amount as Integer = 200_000
+    private Const Amount as Integer = 130_000
     private Const InterestRate as double = 4.15
 
     Sub Main(args As String())
@@ -17,7 +17,7 @@ Module Program
                 ($"{year} year, ").PadRight(10) +
                 $"Payment amount:{paymentSchedule.PaymentScheduleRows.First().PaymentAmount:C} " +
                 $"Total Paid:{paymentSchedule.PaymentScheduleRows.Sum(Function(w) w.PaymentAmount):C}, " +
-                $"Total principal at 3 years:{totalPaid3Year:C}, Total at 5 years {totalPaidFiveYear}" +
+                $"Total principal at 3 years:{totalPaid3Year:C}, Total at 5 years {totalPaidFiveYear:C}" +
                 $", Total at 10 years {totalPaid10Year:C}")
         Next
     End Sub
