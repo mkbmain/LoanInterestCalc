@@ -26,7 +26,7 @@ static PaymentSchedule CalculateAmortizationSchedule(LoanRequestDto loan)
     if (loan.LoanAmount <= 0)
         throw new NullReferenceException($"Invalid loan amount! The loan amount cannot be less than or equal to 0");
 
-    var amortizationSchedule = new List<PaymentScheduleRow>();
+    var amortizationSchedule = new PaymentScheduleRow[loan.NumberOfPayments];
     var monthlyInterestRate = (decimal)(loan.InterestRate / 12.0 / 100.0);
     var monthlyPayment =
         Math.Round(CalculateMonthlyPayment(loan.LoanAmount, monthlyInterestRate, loan.NumberOfPayments), 2);
@@ -46,11 +46,11 @@ static PaymentSchedule CalculateAmortizationSchedule(LoanRequestDto loan)
             remainingBalance = 0;
         }
 
-        amortizationSchedule.Add(new PaymentScheduleRow(number, principalPayment, interestPayment, monthlyPayment,
-            remainingBalance));
+        amortizationSchedule[number-1] = new PaymentScheduleRow(number, principalPayment, interestPayment, monthlyPayment,
+            remainingBalance);
     }
 
-    return new PaymentSchedule(loan, amortizationSchedule.ToArray());
+    return new PaymentSchedule(loan, amortizationSchedule);
 }
 
 static decimal CalculateMonthlyPayment(decimal loanAmount, decimal monthlyInterestRate, int numberOfPayments)
