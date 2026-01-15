@@ -33,7 +33,7 @@ Module Program
             throw new NullReferenceException($"Invalid loan amount! The loan amount cannot be less than or equal to 0")
         End If
                
-        Dim schedule = New List(Of PaymentScheduleRow)()
+        Dim schedule(loanRequest.NumberOfPayments-1) as PaymentScheduleRow
         Dim monthlyInterestRate As decimal = loanRequest.InterestRate/12/100
         Dim monthlyPayment = Math.Round(
             CalculateMonthlyPayment(loanRequest.LoanAmount, monthlyInterestRate, loanRequest.NumberOfPayments), 2)
@@ -52,11 +52,11 @@ Module Program
                 remainingBalance = 0
             End If
 
-            schedule.Add(New PaymentScheduleRow(number, principalPayment, interestPayment, monthlyPayment,
-                                                remainingBalance))
+            schedule(number-1) = New PaymentScheduleRow(number, principalPayment, interestPayment, monthlyPayment,
+                                                remainingBalance)
         Next
 
-        Return New PaymentSchedule(loanRequest, schedule.ToArray())
+        Return New PaymentSchedule(loanRequest, schedule)
     End Function
 
     Private Function CalculateMonthlyPayment(loanAmount as Decimal,
